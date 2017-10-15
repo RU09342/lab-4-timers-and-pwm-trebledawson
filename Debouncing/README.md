@@ -1,15 +1,11 @@
-# Software Debouncing
-In previously labs, we talked about how objects such as switches can cause some nasty effects since they are actually a mechanical system at heart. We talked about the simple hardware method of debouncing, but due to the many different design constraints, you may not be able to add or adjust hardware. Debouncing is also only one of many applications which would require the use of built in Timers to allow for other processes to take place.
+# Introduction
+This project consisted of writing a program in C to control an MSP430 microprocessor to toggle an LED. A crucial difference between this button control and the Lab 3 Button Interrupt program is that this program utilizes a timer to prevent repeated triggers of the interrupt vector caused by mechanical bouncing of the button input.
 
-## Task
-You need to utilize the TIMER modules within the MSP430 processors to implement a debounced switch to control the state of an LED. You most likely will want to hook up your buttons on the development boards to an oscilloscope to see how much time it takes for the buttons to settle. The idea here is that your processor should be able to run other code, while relying on timers and interrupts to manage the debouncing in the background. You should not be using polling techniques for this assignment. Your code should also be able to detect 
+# Basic Functionality
+The introduction to the main() initializes the pin inputs and outputs, as well as enables the Timer A interrupt. 
 
-### Hints
-You need to take a look at how the P1IE and P1IES registers work and how to control them within an interrupt routine. Remember that the debouncing is not going to be the main process you are going to run by the end of the lab.
+# Button Interrupt
+When the button is pressed, the interrupt vector disables the Port 1 interrupt flag before doing anything else. This prevents the bouncing of the button from repeatedly triggering the interrupt vector. After the interrupt flag has been disabled, the LED output is toggled and the debouncing timer is started. The timer counts to an arbitrary value (here chosen as 10,000 to correspond to a 10 ms delay for the 1 MHz clock frequency of the MSP430 SMCLK) before firing the timer interrupt.
 
-## Extra Work
-### Low Power Modes
-Go into the datasheets or look online for information about the low power modes of your processors and using Energy Trace, see what the lowest power consumption you can achieve while still running your debouncing code. Take a note when your processor is not driving the LED (or unplug the header connecting the LED and check) but running the interrupt routine for your debouncing.
-
-### Double the fun
-Can you expand your code to debounce two switches? Do you have to use two Timer peripherals to do this?
+# Timer Interrupt
+When the timer counter register reaches the arbitrary delay value, the timer is halted and the timer counter is reset. Then, the Port 1 interrupt flag is re-enabled, and the Port 1 interrupt flag is reset. This allows the Port 1 interrupt vector to again be accessed with a press of the button.

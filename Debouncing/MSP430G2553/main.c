@@ -21,8 +21,8 @@ __interrupt void button_press(void) // Define interrupt function that runs whene
 
     P1IE &= !BIT3; // Turn off P1.3 interrupt
     P1OUT ^= BIT6;            // Toggle P1.6 (LED)
-    TA0CTL = TASSEL_1 + MC_1 + TACLR; // Set Timer A0 to ACLK, up mode
-    TA0CCR0 = 1000;  // Count to ~10 ms
+    TA0CTL = TASSEL_2 + MC_1 + TACLR; // Set Timer A0 to ACLK, up mode
+    TA0CCR0 = 10000;  // Count to ~10 ms
 }
 
 #pragma vector=TIMER0_A0_VECTOR
