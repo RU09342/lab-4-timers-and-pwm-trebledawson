@@ -1,15 +1,8 @@
-# Hardware PWM
-Now that you have done the software version of PWM, now it is time to start leveraging the other features of these Timer Modules.
+# Introduction
+This project consisted of writing a program in C to control an MSP430 microprocessor to control the brightness of an LED by modulating the width of the on percentage of the period. This pulse-width modulation was controlled with hardware using pin outputs controlled by timer mode.
 
-## Task
-You need to replicate the same behavior as in the software PWM, only using the Timer Modules ability to directly output to a GPIO Pin instead of managing them in software. 
+# Basic Functionality
+The main() is modularized into various setup functions. The LED setup function initializes the LED output pins, the Button setup function initializes the button input pins, and the Timer setup function initializes the Timer A0 settings. 
 
-### Hints 
-Read up on the P1SEL registers as well as look at the Timer modules ability to multiplex.
-
-## Extra Work
-### Using ACLK
-Some of these microprocessors have a built in ACLK which is extremely slow compared to your up to 25MHz available on some of them. What is the overall impact on the system when using this clock? Can you actually use your PWM code with a clock that slow?
-
-### Ultra Low Power
-Using a combination of ACLK, Low Power Modes, and any other means you may deem necessary, optimize this PWM code to run at 50% duty cycle with a LED on the MSP430FR5994. In particular, time how long your code can run on the fully charged super capacitor. You do not need to worry about the button control in this case, and you will probably want to disable all the GPIO that you are not using (nudge, nudge, hint, hint).
+# PWM Setup
+A crucial component of the hardware PWM is the PWM setup function. By setting TA0CCTL1 to OUTMOD_7, the output pin specified in the LED setup function is controlled by Timer A0, and the behavior is determined by OUTMOD_7, which sets the output pin high when the timer counter reaches CCR0, and resets the output pin to low when the timer counter reaches CCR1. Because of this, all that is necessary to modify the duty cycle is changing CCR1. This is done in the interrupt vectors, whose behavior is similar to that of the Software PWM code.
