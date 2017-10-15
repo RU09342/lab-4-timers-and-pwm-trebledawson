@@ -36,7 +36,7 @@ __interrupt void button_press(void) // Define interrupt function that runs whene
 {
     P1IE &= !BIT3; // Turn off P1.3 interrupt
     unsigned int pwm = TA0CCR0 / 10;
-    if (TA0CCR1 <= (pwm * 9))
+    if (TA0CCR1 <= TA0CCR0)
     {
         TA0CCR1 += pwm;
     }
